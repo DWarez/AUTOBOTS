@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "C:\\Users\\DWarez\\anaconda3\\Lib\\site-packages",
+        "./src/embeddings"
+    ]
+}
