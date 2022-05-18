@@ -8,6 +8,8 @@ This repository has been made only for educational purposes. This implementation
 **Positional Encoding**: [Amirhossein Kazemnejad's explanation](https://kazemnejad.com/blog/transformer_architecture_positional_encoding/)
 
 
+**Layer Normalization**: [Papers with code](https://paperswithcode.com/method/layer-normalization)
+
 **Attention**: [Jay Alammar's explanation](https://jalammar.github.io/visualizing-neural-machine-translation-mechanics-of-seq2seq-models-with-attention/)
 
 
