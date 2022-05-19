@@ -29,6 +29,4 @@ class LayerNormalization(nn.Module):
         var = ((x - mean) ** 2).mean(dim=-1, keepdim=True)
         std = (var + self.epsilon).sqrt()
         y = (x - mean) / std
-        y *= self.gamma
-        y += self.beta
-        return y
+        return y * self.gamma + self.beta
