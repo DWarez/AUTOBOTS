@@ -1,4 +1,4 @@
-# AUTOBOTS
+# AUTOBOTS 🤖
 My implementation of Transformers from the paper "Attention is all you need"
 
 ### About the repository
