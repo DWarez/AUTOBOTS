@@ -1,5 +1,5 @@
 import sys
-sys.path.append('src/models')
+sys.path.append('src/modules')
 
 import torch
 import torch.nn as nn
