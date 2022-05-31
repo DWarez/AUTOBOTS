@@ -11,9 +11,13 @@ class ScaleDotProductAttention(nn.Module):
         self.softmax = nn.Softmax(dim=-1)
 
 
-    def forward(self, query, key, value):
+    def forward(self, query, key, value, mask=None, e=1e-12):
         d_k = query.size(-1)
         scores = (query @ key.transpose(-2, -1))/math.sqrt(d_k)
+
+        if mask is not None:
+            scores = scores.masked_fill(mask==0, -e)
+        
         p_attention = self.softmax(scores)
 
         return torch.matmul(p_attention, value), p_attention
@@ -30,7 +34,7 @@ class MultiHeadAttention(nn.Module):
             attention (nn.Module, optional): type of attention mechanism. Defaults to ScaleDotProductAttention.
         """
         super(MultiHeadAttention, self).__init__()
-        self.d_model = d_model
+        self.d_model = d_model if isinstance(d_model, int) else d_model[-1]
         self.n_heads = n_heads
         self.attention = attention
 
@@ -73,7 +77,7 @@ class MultiHeadAttention(nn.Module):
         return _tensor.contiguous().view(batch_size, length, d_model)
 
 
-    def forward(self, query, key, value):
+    def forward(self, query, key, value, mask=None):
         # Pass Q, K, V through linear layers
         h_q, h_k, h_v = self.linear_q(query), self.linear_k(key), self.linear_v(value)
         
@@ -81,7 +85,7 @@ class MultiHeadAttention(nn.Module):
         h_q, h_k, h_v = self.split(h_q), self.split(h_k), self.split(h_v)
 
         # Compute attention for the splitted, hidden representations of Q, K, V
-        result, p_attention = self.attention(h_q, h_k, h_v)
+        result, p_attention = self.attention(h_q, h_k, h_v, mask=mask)
 
         # Concatenate the result and pass it through the linear layer
         result = self.linear_c(self.concatenate(result))
