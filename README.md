@@ -5,6 +5,8 @@ My implementation of Transformers from the paper "Attention is all you need"
 This repository has been made only for educational purposes. This implementation was realized only for my personal better understanding of the Transformer model.
 
 ### Useful resources
+**Token Embedding**: [AssemblyAI's explanation on word embeddings (YouTube)](https://www.youtube.com/watch?v=5MaWmXwxFNQ)
+
 **Positional Encoding**: [Amirhossein Kazemnejad's explanation](https://kazemnejad.com/blog/transformer_architecture_positional_encoding/)
 
 
