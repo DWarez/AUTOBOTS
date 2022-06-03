@@ -6,13 +6,13 @@ import torch.nn as nn
 
 from positional_encoding import PositionalEncoding
 
-
 device = "cpu"
 
-_tensor = torch.randn(10, 100, 20)
+_tensor = torch.randn(2, 10, 6)
 
-pos_encoding = PositionalEncoding(_tensor.shape[0], _tensor.shape[-1], device, max_lenght=100)
+pos_encoding = PositionalEncoding(_tensor.shape[0], _tensor.shape[-1], device)
 
 result = pos_encoding.forward(_tensor)
 
 print(result.shape)
+print(result)

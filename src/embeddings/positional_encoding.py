@@ -4,13 +4,15 @@ import math
 
 class PositionalEncoding(nn.Module):
     """Sinusoidal encoding of the word embeddings"""
-    def __init__(self, batch_size, d_model, device, max_lenght=5000, dropout_prob=0.1):
+    def __init__(self, batch_size: int, d_model: int, device: str, max_lenght=5000, dropout_prob=0.1) -> None:
         """Init the PositionalEncoding module
 
         Args:
-            d_model (int): dimensionality of the words' embedding
-            device (str): hardware device in use
-            max_lenght (int, optional): maximum lenght of the sequence. Defaults to 512.
+            batch_size (int): size of the batch.
+            d_model (int): dimensionality of the words' embedding.
+            device (str): hardware device in use.
+            max_lenght (int, optional): maximum lenght of the sequence. Defaults to 5000.
+            dropout_prob (int, optional): probability of applying dropout. Defaults to 0.1.
         """
         super(PositionalEncoding, self).__init__()
 
@@ -41,10 +43,10 @@ class PositionalEncoding(nn.Module):
         """Positional enconding forward step
 
         Args:
-            x (torch.Tensor): input tensor
+            x (torch.Tensor): input tensor. Shape [batch_size, sequence_length, d_model]
 
         Returns:
-            torch.Tensor: dropout of positional encoding
+            torch.Tensor: positional encoding
         """
         # return the sum of word embedding + positional embedding
         x = x + self.pos_encoding[:, :x.size(1), :]
