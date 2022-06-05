@@ -15,11 +15,3 @@ data, target = dataset.get_batch(train, 10)
 
 print(f"Data shape: {data.shape}")
 print(f"Target shape: {target.shape}")
-
-embed = Embedding(len(dataset.vocab), 20)
-e_data = embed(data)
-print(f"Embedded data shape: {e_data.shape}")
-
-pe = PositionalEncoding(35, e_data.shape[1], 20, device="cpu")
-pe_data = pe(e_data)
-print(f"PE data shape: {pe_data.shape}")
