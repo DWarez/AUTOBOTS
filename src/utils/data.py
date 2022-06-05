@@ -88,6 +88,15 @@ class WikiText2Dataset():
 
 
     def get_batch(self, src: torch.Tensor, index: int):
+        """Given a tensor (set) returns a batch 
+
+        Args:
+            src (torch.Tensor): train/val/test set
+            index (int): index (typically a loop index)
+
+        Returns:
+            tuple(torch.Tensor, torch.Tensor): data and target 
+        """
         sequence_length = min(self.bptt, src.shape[-1] - index - 1)
         data = src[index:index+sequence_length]
         target = src[index+1:index+1+sequence_length].reshape(-1)
