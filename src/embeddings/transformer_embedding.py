@@ -18,10 +18,13 @@ class TokenEmbedding(nn.Embedding):
 
 class TransformerEmbedding(nn.Module):
     """Embedding of tokens for the Transformer"""
-    def __init__(self, v_size: int, d_model: int, max_length: int, dropout_prob: float, device: str) -> None:
-        """Embeds the words into TokenEmbeddings and applies positional encoding
+    def __init__(self, batch_size: int, v_size: int, seq_length: int, 
+                    d_model: int, dropout_prob: float, device: str) -> None:
+        """Embeds the words into TokenEmbeddings and applies positional 
+        encoding
 
         Args:
+            batch_size (int): batch size
             v_size (int): vocabulary size
             d_model (int): size of embedding
             max_length (int): max length of sequence
@@ -30,7 +33,8 @@ class TransformerEmbedding(nn.Module):
         """
         super(TransformerEmbedding, self).__init__()
         self.token_embedding = TokenEmbedding(v_size=v_size, d_model=d_model)
-        self.positional_encoding = PositionalEncoding(d_model=d_model, device=device)
+        self.positional_encoding = PositionalEncoding(batch_size=batch_size, 
+                        seq_length=seq_length, d_model=d_model, device=device)
         self.dropout = nn.Dropout(dropout_prob)
 
     
@@ -39,6 +43,6 @@ class TransformerEmbedding(nn.Module):
         Args:
             x (torch.Tensor): tokens to embed 
         """
-        te = self.token_embedding(x.long())
+        te = self.token_embedding(x)
         pe = self.positional_encoding(te)
         return self.dropout(pe)
