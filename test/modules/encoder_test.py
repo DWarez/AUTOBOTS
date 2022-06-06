@@ -1,14 +1,17 @@
 import sys
 sys.path.append('src/modules')
+sys.path.append('src/utils')
+sys.path.append('src/embeddings')
 
 import torch
-import torch.nn as nn
-
-from encoder import EncoderLayer
+from encoder import Encoder
 
 
-_tensor = torch.zeros(1, 100, 20)
+_tensor = torch.zeros([32, 128])
 
-encoder_layer = EncoderLayer(_tensor.shape[-1], 10, 4, 1e-10)
+embed = Encoder(batch_size=32, v_size=2000, 
+                                seq_length=128, d_model=20,
+                                d_hidden=5, n_heads=4, n_layers=1,
+                                dropout_prob=0.1, device="cpu")
 
-print(encoder_layer)
+print(embed(_tensor).shape)
