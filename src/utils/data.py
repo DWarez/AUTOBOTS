@@ -34,7 +34,7 @@ class WikiText2Dataset():
 
         Args:
             batch_size (int): batch size
-            bptt (int): chuncks length
+            bptt (int): chuncks length for backpropagation through time
             device (str): device to use
         """
         self.batch_size = batch_size
