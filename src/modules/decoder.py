@@ -22,7 +22,10 @@ class DecoderLayer(nn.Module):
             dropout_prob (float): dropout probability
         """
         super(DecoderLayer, self).__init__()
-        self.attention = MultiHeadAttention(d_model=d_model, n_heads=n_heads)
+        self.self_attention = MultiHeadAttention(d_model=d_model, 
+                                                        n_heads=n_heads)
+        self.enc_dec_attention = MultiHeadAttention(d_model=d_model, 
+                                                        n_heads=n_heads)
         self.layer_norm1 = LayerNormalization(d_model=d_model)
         self.dropout1 = nn.Dropout(dropout_prob)
         self.ffnn = PositionWiseFF(d_model=d_model, d_hidden=d_hidden)
@@ -47,14 +50,15 @@ class DecoderLayer(nn.Module):
         Returns:
             torch.Tensor: output of decoding
         """
-        x = self.attention(query=dec, key=dec, value=dec, 
+        x = self.self_attention(query=dec, key=dec, value=dec, 
                                                         mask=target_mask)
         x = self.layer_norm1(x + dec)
         x = self.dropout1(x)
 
         if enc is not None:
             _x = x
-            x = self.attention(query=x, key=enc, value=enc, mask=source_mask)
+            x = self.enc_dec_attention(query=x, key=enc, value=enc, 
+                                                        mask=source_mask)
             x = self.layer_norm1(x + _x)
             x = self.dropout1(x)
         
