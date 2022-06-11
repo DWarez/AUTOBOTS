@@ -6,13 +6,16 @@ from collections import OrderedDict
 class PositionWiseFF(nn.Module):
     """Position Wise Feed Forward Module"""
 
-    def __init__(self, d_model, d_hidden, dropout_prob=0.1):
+    def __init__(self, d_model: int, d_hidden: int, 
+                                            dropout_prob: float=0.1) -> None:
         """PositionWiseFF constructor
 
         Args:
-            d_model (int): shape of the of the input tensor or the last dimension of the input tensor
+            d_model (int): shape of the of the input tensor or the last 
+                dimension of the input tensor
             d_hidden (int): shape of the hidden representation
-            dropout_prob (float, optional): dropout probability. Defaults to 0.1.
+            dropout_prob (float, optional): dropout probability.
+                Defaults to 0.1.
         """
         super(PositionWiseFF, self).__init__()
         self.d_model = d_model if isinstance(d_model, int) else d_model[-1]
