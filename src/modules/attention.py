@@ -11,7 +11,22 @@ class ScaleDotProductAttention(nn.Module):
         self.softmax = nn.Softmax(dim=-1)
 
 
-    def forward(self, query, key, value, mask=None, e=1e-12):
+    def forward(self, query: torch.Tensor, key: torch.Tensor, 
+                    value: torch.Tensor, mask: torch.Tensor=None, e=1e-12):
+        """ScaleDotProductAttention forward step
+
+        Args:
+            query (torch.Tensor): Q as for query
+            key (torch.Tensor): K as for key
+            value (torch.Tensor): V as for value
+            mask (torch.Tensor, optional): mask to apply to the scores. 
+                Defaults to None.
+            e (float, optional): value to set masked elements. 
+                Defaults to 1e-12.
+
+        Returns:
+            tuple(torch.Tensor, torch.Tensor): attention result, softmax output
+        """
         d_k = query.size(-1)
         scores = (query @ key.transpose(-2, -1))/math.sqrt(d_k)
 
@@ -25,8 +40,9 @@ class ScaleDotProductAttention(nn.Module):
     
 class MultiHeadAttention(nn.Module):
     """Multi Head Attention mechanism"""
-    def __init__(self, d_model, n_heads, attention=ScaleDotProductAttention()):
-        """_summary_
+    def __init__(self, d_model: int, n_heads: int, 
+                    attention=ScaleDotProductAttention()) -> None:
+        """MultiHeadAttention constructor
 
         Args:
             d_model (int): shape of the of the input tensor or the last 
@@ -47,7 +63,7 @@ class MultiHeadAttention(nn.Module):
         self.linear_c = nn.Linear(d_model, d_model)
 
         
-    def split(self, _tensor):
+    def split(self, _tensor: torch.Tensor) -> torch.Tensor:
         """Splits the original tensor by the number of heads
 
         Args:
@@ -67,7 +83,7 @@ class MultiHeadAttention(nn.Module):
         return _tensor
 
 
-    def concatenate(self, _tensor):
+    def concatenate(self, _tensor: torch.Tensor) -> torch.Tensor:
         """Groups the tensor splits after the attention mechanism is applied
 
         Args:
@@ -82,7 +98,20 @@ class MultiHeadAttention(nn.Module):
         return _tensor.contiguous().view(batch_size, length, d_model)
 
 
-    def forward(self, query, key, value, mask=None):
+    def forward(self, query: torch.Tensor, key: torch.Tensor, 
+                value: torch.Tensor, mask: torch.Tensor=None) -> torch.Tensor:
+        """Forward step of MHA
+
+        Args:
+            query (torch.Tensor): Q as for query
+            key (torch.Tensor): K as for key
+            value (torch.Tensor): V as for value
+            mask (torch.Tensor, optional): mask to apply during attention. 
+                Defaults to None.
+
+        Returns:
+            torch.Tensor: output of Linear layer
+        """
         # Pass Q, K, V through linear layers
         h_q, h_k, h_v = self.linear_q(query), self.linear_k(key), \
                                                         self.linear_v(value)
