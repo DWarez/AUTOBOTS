@@ -10,7 +10,7 @@ device = "cpu"
 
 _tensor = torch.randn(2, 10, 6)
 
-pos_encoding = PositionalEncoding(2, 10, 6, "cpu")
+pos_encoding = PositionalEncoding(10, 6, "cpu")
 
 result = pos_encoding.forward(_tensor)
 

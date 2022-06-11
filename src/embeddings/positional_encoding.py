@@ -4,12 +4,11 @@ import math
 
 class PositionalEncoding(nn.Module):
     """Sinusoidal encoding of the word embeddings"""
-    def __init__(self, batch_size: int, seq_length:int, d_model: int, \
-                                        device: str, dropout_prob=0.1) -> None:
+    def __init__(self, seq_length:int, d_model: int, device: str,
+                                                    dropout_prob=0.1) -> None:
         """Init the PositionalEncoding module
 
         Args:
-            batch_size (int): size of the batch.
             d_model (int): dimensionality of the words' embedding.
             device (str): hardware device in use.
             max_lenght (int, optional): maximum lenght of the sequence. 
@@ -23,7 +22,7 @@ class PositionalEncoding(nn.Module):
 
         # It's important that the condings have the same size of the embedding 
         # of the words since the two must be summed
-        self.pos_encoding = torch.zeros(batch_size, seq_length, d_model, \
+        self.pos_encoding = torch.zeros(seq_length, d_model, \
                                                             device=device)
         self.pos_encoding.requires_grad = False
 
@@ -39,9 +38,9 @@ class PositionalEncoding(nn.Module):
         divider = torch.exp(indexes * (-math.log(10000.0)/d_model))
 
         # all odd dimensions
-        self.pos_encoding[:, :, 0::2] = torch.sin(positions * divider)
+        self.pos_encoding[:, 0::2] = torch.sin(positions * divider)
         # all even dimensions
-        self.pos_encoding[:, :, 1::2] = torch.cos(positions * divider)
+        self.pos_encoding[:, 1::2] = torch.cos(positions * divider)
 
 
     def forward(self, x: torch.Tensor):
@@ -55,5 +54,5 @@ class PositionalEncoding(nn.Module):
             torch.Tensor: positional encoding
         """
         # return the sum of word embedding + positional embedding
-        x = x + self.pos_encoding[:, :x.size(1), :]
+        x = x + self.pos_encoding[:x.size(1), :]
         return self.dropout(x)

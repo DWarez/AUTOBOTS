@@ -70,13 +70,12 @@ class EncoderLayer(nn.Module):
 
 class Encoder(nn.Module):
     """Encoder module"""
-    def __init__(self, v_size: int, batch_size: int, seq_length: int, 
+    def __init__(self, v_size: int, seq_length: int, 
                     d_model: int, d_hidden: int, n_heads: int, n_layers: int, 
                                             dropout_prob: float, device: str):
         """Encoder module of Transformer architecture
 
         Args:
-            batch_size (int): batch size
             v_size (int): vocabulary size
             seq_length (int): length of the sequence
             d_model (int): size of token embedding
@@ -88,8 +87,7 @@ class Encoder(nn.Module):
             device (str): device to use
         """
         super(Encoder, self).__init__()
-        self.embedding = TransformerEmbedding(batch_size=batch_size, 
-                                                v_size=v_size, d_model=d_model, 
+        self.embedding = TransformerEmbedding(v_size=v_size, d_model=d_model, 
                                                 seq_length=seq_length, 
                                                 dropout_prob=dropout_prob, 
                                                 device=device)

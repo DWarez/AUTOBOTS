@@ -55,8 +55,8 @@ class DecoderLayer(nn.Module):
         if enc is not None:
             _x = x
             x = self.attention(query=x, key=enc, value=enc, mask=source_mask)
-            x = self.layer_norm(x + _x)
-            x = self.dropout(x)
+            x = self.layer_norm1(x + _x)
+            x = self.dropout1(x)
         
         _x = x
         x = self.ffnn(x)
@@ -67,14 +67,13 @@ class DecoderLayer(nn.Module):
 
 
 class Decoder(nn.Module):
-    def __init__(self, v_size_dec: int, batch_size: int, seq_length: int, 
+    def __init__(self, v_size_dec: int, seq_length: int, 
                     d_model: int, d_hidden: int, n_heads: int, 
                     n_layers: int, dropout_prob: float, device: str) -> None:
         """Decoder constructor
 
         Args:
-            v_size_dec (int): size of the decoder vocabulary
-            batch_size (int): batch size 
+            v_size_dec (int): size of the decoder vocabulary 
             seq_length (int): length of the sequence
             d_model (int): size of token embedding
             d_hidden (int): size of hidden layers
@@ -84,8 +83,7 @@ class Decoder(nn.Module):
             device (str): device to use
         """
         super(Decoder, self).__init__()
-        self.embedding = TransformerEmbedding(batch_size=batch_size, 
-                                                v_size=v_size_dec,
+        self.embedding = TransformerEmbedding(v_size=v_size_dec,
                                                 seq_length=seq_length,
                                                 d_model=d_model,
                                                 dropout_prob=dropout_prob,

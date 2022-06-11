@@ -12,12 +12,11 @@ from encoder import Encoder
 
 _tensor = torch.ones([32, 128])
 
-encoder = Encoder(batch_size=32, v_size=2000, 
-                                seq_length=128, d_model=20,
+encoder = Encoder(v_size=2000, seq_length=128, d_model=20,
                                 d_hidden=5, n_heads=4, n_layers=1,
                                 dropout_prob=0.1, device="cpu")
 
-decoder = Decoder(v_size_dec=2000, batch_size=32, seq_length=128, d_model=20,
+decoder = Decoder(v_size_dec=2000, seq_length=128, d_model=20,
                     d_hidden=10, n_heads=4, n_layers=1, dropout_prob=0.1, 
                     device="cpu")
 
