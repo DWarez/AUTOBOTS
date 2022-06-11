@@ -28,10 +28,12 @@ class EncoderLayer(nn.Module):
         super(EncoderLayer, self).__init__()
         self.attention = MultiHeadAttention(d_model=d_model, 
                                                     n_heads=n_heads)
-        self.layer_norm = LayerNormalization(d_model=d_model)
-        self.dropout = nn.Dropout(dropout_prob)
+        self.layer_norm1 = LayerNormalization(d_model=d_model)
+        self.dropout1 = nn.Dropout(dropout_prob)
         self.ffnn = PositionWiseFF(d_model=d_model, d_hidden=d_hidden, 
                                                     dropout_prob=dropout_prob)
+        self.layer_norm2 = LayerNormalization(d_model=d_model)
+        self.dropout2 = nn.Dropout(dropout_prob)
 
 
     def forward(self, x: torch.Tensor, mask:torch.Tensor=None) -> torch.Tensor:
@@ -52,16 +54,16 @@ class EncoderLayer(nn.Module):
         x = self.attention(query=x, key=x, value=x, mask=mask)
 
         # First Add and Normalize
-        x = self.layer_norm(tmp + x)
-        x = self.dropout(x)
+        x = self.layer_norm1(tmp + x)
+        x = self.dropout1(x)
 
         # PositionWide FF
         tmp = x
         x = self.ffnn(x)
 
         # Second Add and Normalize
-        x = self.layer_norm(tmp + x)
-        x = self.dropout(x)
+        x = self.layer_norm2(tmp + x)
+        x = self.dropout2(x)
 
         return x
 

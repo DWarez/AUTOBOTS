@@ -23,9 +23,11 @@ class DecoderLayer(nn.Module):
         """
         super(DecoderLayer, self).__init__()
         self.attention = MultiHeadAttention(d_model=d_model, n_heads=n_heads)
-        self.layer_norm = LayerNormalization(d_model=d_model)
-        self.dropout = nn.Dropout(dropout_prob)
+        self.layer_norm1 = LayerNormalization(d_model=d_model)
+        self.dropout1 = nn.Dropout(dropout_prob)
         self.ffnn = PositionWiseFF(d_model=d_model, d_hidden=d_hidden)
+        self.layer_norm2 = LayerNormalization(d_model=d_model)
+        self.dropout2 = nn.Dropout(dropout_prob)
 
     
     def forward(self, dec: torch.Tensor, enc: torch.Tensor, 
@@ -47,8 +49,8 @@ class DecoderLayer(nn.Module):
         """
         x = self.attention(query=dec, key=dec, value=dec, 
                                                         mask=target_mask)
-        x = self.layer_norm(x + dec)
-        x = self.dropout(x)
+        x = self.layer_norm1(x + dec)
+        x = self.dropout1(x)
 
         if enc is not None:
             _x = x
@@ -58,8 +60,8 @@ class DecoderLayer(nn.Module):
         
         _x = x
         x = self.ffnn(x)
-        x = self.layer_norm(x + _x)
-        x = self.dropout(x)
+        x = self.layer_norm2(x + _x)
+        x = self.dropout2(x)
         
         return x
 
