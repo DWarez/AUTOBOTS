@@ -28,7 +28,7 @@ class ScaleDotProductAttention(nn.Module):
             tuple(torch.Tensor, torch.Tensor): attention result, softmax output
         """
         d_k = query.size(-1)
-        scores = (query @ key.transpose(-2, -1))/math.sqrt(d_k)
+        scores = (query @ key.transpose(2, 3))/math.sqrt(d_k)
 
         if mask is not None:
             scores = scores.masked_fill(mask==0, -e)
@@ -78,8 +78,8 @@ class MultiHeadAttention(nn.Module):
                                                 the number of heads"
         d_v = d_model//self.n_heads
 
-        # _tensor = _tensor.view(batch_size, length, self.n_heads, d_v).transpose(1, 2)
-        _tensor = _tensor.view(batch_size, self.n_heads, length, d_v)
+        _tensor = _tensor.view(batch_size, length, self.n_heads, d_v)\
+                                                            .transpose(1, 2)
         return _tensor
 
 
@@ -94,8 +94,8 @@ class MultiHeadAttention(nn.Module):
         """
         batch_size, n_heads, length, d_v = _tensor.size()
         d_model = n_heads * d_v
-        # return _tensor.transpose(1, 2).contiguous().view(batch_size, length, d_model)
-        return _tensor.contiguous().view(batch_size, length, d_model)
+        return _tensor.transpose(1, 2).contiguous()\
+                                            .view(batch_size, length, d_model)
 
 
     def forward(self, query: torch.Tensor, key: torch.Tensor, 
