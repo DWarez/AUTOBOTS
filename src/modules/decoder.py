@@ -33,31 +33,36 @@ class DecoderLayer(nn.Module):
         self.dropout2 = nn.Dropout(dropout_prob)
 
     
-    def forward(self, dec: torch.Tensor, enc: torch.Tensor, 
+    def forward(self, target: torch.Tensor, source: torch.Tensor, 
                                     target_mask: torch.Tensor, 
                                     source_mask: torch.Tensor) -> torch.Tensor:
         """Forward step
         x -> self attention -> layer normalization -> dropout
-        (repeat if enc is not none) ->
+        (repeat if source is not none) ->
         -> ffnn -> layer normalization -> dropout
 
         Args:
-            dec (torch.Tensor): decoder input
-            enc (torch.Tensor): output of encoder
+            target (torch.Tensor): decoder input 
+                [batch_size, trg_len, d_model]
+            source (torch.Tensor): output of encoder
+                [batch_size, src_len, d_model]
             target_mask (torch.Tensor): mask for target tensor
+                [batch_size, 1, trg_len, trg_len]
             source_mask (torch.Tensor): mask for encoder output
+                [batch_size, 1, 1, src_len]
 
         Returns:
             torch.Tensor: output of decoding
+                [batch_size, target_length, d_model]
         """
-        x = self.self_attention(query=dec, key=dec, value=dec, 
+        x = self.self_attention(query=target, key=target, value=target, 
                                                         mask=target_mask)
-        x = self.layer_norm1(x + dec)
+        x = self.layer_norm1(x + target)
         x = self.dropout1(x)
 
-        if enc is not None:
+        if source is not None:
             _x = x
-            x = self.enc_dec_attention(query=x, key=enc, value=enc, 
+            x = self.enc_dec_attention(query=x, key=source, value=source, 
                                                         mask=source_mask)
             x = self.layer_norm1(x + _x)
             x = self.dropout1(x)
@@ -115,7 +120,8 @@ class Decoder(nn.Module):
             source_mask (torch.Tensor): encoder output mask tensor
 
         Returns:
-            torch.Tensor: _description_
+            torch.Tensor: output of decoding block
+                [batch_size, target_length, vocabulary_size_decoder]
         """
         x = self.embedding(target.long())
 
