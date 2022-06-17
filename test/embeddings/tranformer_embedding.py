@@ -11,4 +11,6 @@ embed = TransformerEmbedding(v_size=200, d_model=20,
                                 seq_length=35, dropout_prob=0.1, 
                                 device="cpu")
 
-print(embed(_tensor).shape)
+result = embed(_tensor).shape
+
+assert result.shape == (128, 35, 20), f"Incorrect embedding shape, expected (128, 35, 20), got {result.shape}"

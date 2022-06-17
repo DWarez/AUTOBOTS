@@ -14,4 +14,6 @@ model = Transformer(v_size_enc=200, v_size_dec=200,
                     n_layers=2, src_pad_idx=2, trg_pad_idx=2, dropout_prob=0.1,
                     device="cpu")
 
-print(model(_tensor, _tensor).shape)
+result = model(_tensor, _tensor)
+
+assert result.shape == (32, 128, 2000), f"Incorrect embedding shape, expected (32, 128, 2000), got {result.shape}"

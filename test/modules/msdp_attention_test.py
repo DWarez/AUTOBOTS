@@ -12,4 +12,6 @@ value = torch.zeros(1, 100, 20)
 
 module = MultiHeadAttention(query.shape[-1], 4)
 
-print(module.forward(query, key, value).shape)
+result = module.forward(query, key, value)
+
+assert result.shape == (1, 100, 20), f"Incorrect embedding shape, expected (1, 100, 20), got {result.shape}"

@@ -10,7 +10,6 @@ from position_wise_ff import PositionWiseFF
 _tensor = torch.ones([1, 512, 20])
 
 layer = PositionWiseFF(20, 100)
-print(layer.forward(_tensor).shape)
+result = layer.forward(_tensor)
 
-layer = PositionWiseFF(_tensor.shape, 100)
-print(layer.forward(_tensor).shape)
+assert result.shape == (1, 512, 20), f"Incorrect embedding shape, expected (1, 512, 20), got {result.shape}"

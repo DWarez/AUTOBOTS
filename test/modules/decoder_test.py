@@ -22,4 +22,6 @@ decoder = Decoder(v_size_dec=2000, seq_length=128, d_model=20,
 
 src = encoder(_tensor)
 
-print(decoder(_tensor, src, None, None).shape)
+result = decoder(_tensor, src, None, None)
+
+assert result.shape == (32, 128, 2000), f"Incorrect embedding shape, expected (32, 128, 2000), got {result.shape}"

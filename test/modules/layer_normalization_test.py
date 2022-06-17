@@ -13,4 +13,4 @@ layer_norm = LayerNormalization(_tensor.shape)
 
 result = layer_norm.forward(_tensor)
 
-print(result.shape)
+assert result.shape == (1, 100, 20), f"Incorrect embedding shape, expected (1, 100, 20), got {result.shape}"

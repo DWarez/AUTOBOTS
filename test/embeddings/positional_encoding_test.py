@@ -14,4 +14,4 @@ pos_encoding = PositionalEncoding(10, 6, "cpu")
 
 result = pos_encoding.forward(_tensor)
 
-print(result.shape)
+assert result.shape == (2, 10, 6), f"Incorrect embedding shape, expected (2, 10, 6), got {result.shape}"
